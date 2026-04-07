@@ -1,1 +1,35 @@
-
+file = open('resource/students.txt', 'w', encoding='utf-8')
+file.write('Цвык Арсений:5,5,5,5\n')
+file.write('Смоленцев Кирилл:4,3,3,5\n')
+file.write('Антонов Матвей:2,3,4,3\n')
+file.write('Чубабрия Даниил:4,4,3,4\n')
+file.close()
+file = open('resource/students.txt', 'r', encoding='utf-8')
+lines = file.readlines()
+file.close()
+students = []
+for line in lines:
+    line = line.strip()
+    if line == '':
+        continue
+    name, ozenki_str = line.split(':')
+    ozenki = ozenki_str.split(',')
+    total = 0
+    for o in ozenki:
+        total = total + int(o)
+    avg = total / len(ozenki)
+    students.append([name, avg])
+file = open('resource/result.txt', 'w', encoding='utf-8')
+for name, avg in students:
+    if avg > 4.0:
+        file.write(name + ': ' + str(avg) + '\n')
+file.close()
+lyshii = students[0]
+xydshii = students[0]
+for name, avg in students:
+    if avg > lyshii[1]:
+        lyshii = [name, avg]
+    if avg < xydshii[1]:
+        xydshii = [name, avg]
+print('Лучший:', lyshii[0], '-', lyshii[1])
+print('Худший:', xydshii[0], '-', xydshii[1])
