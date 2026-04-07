@@ -1,1 +1,37 @@
-
+file = open('resource/text.txt', 'w', encoding='utf-8')
+file.write('Яркое голубое небо\n')
+file.write('Обожаю практику\n')
+file.write('АМД лучше Интел\n')
+file.write('Я пишу на пайтон\n')
+file.write('Забыл сделать химиию\n')
+file.close()
+file = open('resource/text.txt', 'r', encoding='utf-8')
+lines = file.readlines()
+file.close()
+stroki = []
+for line in lines:
+    stroki.append(line.strip())
+print('Строк:', len(stroki))
+vse_slova = []
+for stroka in stroki:
+    slova = stroka.split()
+    for slovo in slova:
+        vse_slova.append(slovo)
+print('Слов:', len(vse_slova))
+dlinnaya = ''
+for stroka in stroki:
+    if len(stroka) > len(dlinnaya):
+        dlinnaya = stroka
+print('Самая длинная строка:', dlinnaya)
+glasnie = 'аеёиоуыэюя'
+soglasnie = 'бвгджзйклмнпрстфхцчшщъь'
+schet_glasnih = 0
+schet_soglasnih = 0
+for stroka in stroki:
+    for bukva in stroka.lower():
+        if bukva in glasnie:
+            schet_glasnih = schet_glasnih + 1
+        if bukva in soglasnie:
+            schet_soglasnih = schet_soglasnih + 1
+print('Гласных:', schet_glasnih)
+print('Согласных:', schet_soglasnih)
