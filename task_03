@@ -1,7 +1,7 @@
 import csv
 products = []
-with open('products.csv', 'r', encoding='utf-8') as f:
-    reader = csv.DictReader(f)
+with open('products.csv', 'r', encoding='utf-8') as file:
+    reader = csv.DictReader(file)
     for stroka in reader:
         products.append([stroka['Название'], int(stroka['Цена']), int(stroka['Количество'])])
 while True:
@@ -27,8 +27,8 @@ while True:
             vsego += product[1] * product[2]
         print(f'Общая стоимость: {vsego} руб.')
     elif command == '4':
-        with open('products.csv', 'w', encoding='utf-8', newline='') as f:
-            writer = csv.writer(f)
+        with open('products.csv', 'w', encoding='utf-8', newline='') as file:
+            writer = csv.writer(file)
             writer.writerow(['Название', 'Цена', 'Количество'])
             writer.writerows(products)
         print('Сохранено')
@@ -38,14 +38,14 @@ while True:
             for j in range(i + 1, len(sorted_products)):
                 if sorted_products[i][1] > sorted_products[j][1]:
                     sorted_products[i], sorted_products[j] = sorted_products[j], sorted_products[i]
-        with open('sorted_products.csv', 'w', encoding='utf-8', newline='') as f:
-            writer = csv.writer(f)
+        with open('sorted_products.csv', 'w', encoding='utf-8', newline='') as file:
+            writer = csv.writer(file)
             writer.writerow(['Название', 'Цена', 'Количество'])
             writer.writerows(sorted_products)
         print('Сохранено в sorted_products.csv')
     elif command == '0':
-        with open('products.csv', 'w', encoding='utf-8', newline='') as f:
-            writer = csv.writer(f)
+        with open('products.csv', 'w', encoding='utf-8', newline='') as file:
+            writer = csv.writer(file)
             writer.writerow(['Название', 'Цена', 'Количество'])
             writer.writerows(products)
         print('Завершение работы')
