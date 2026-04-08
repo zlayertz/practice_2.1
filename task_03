@@ -1,1 +1,69 @@
+import csv
 
+# 1. Читаем данные
+products = []
+with open('products.csv', 'r', encoding='utf-8') as f:
+    reader = csv.DictReader(f)
+    for stroka in reader:
+        products.append([stroka['Название'], int(stroka['Цена']), int(stroka['Количество'])])
+
+while True:
+    print('\n1 - Добавить  2 - Найти  3 - Стоимость  4 - Сохранить  5 - Сортировка  0 - Выход')
+    command = input('Выберите: ')
+    
+    # 2. Добавление
+    if command == '1':
+        name = input('Название: ')
+        price = int(input('Цена: '))
+        kolvo = int(input('Количество: '))
+        products.append([name, price, kolvo])
+        print('Добавлено!')
+    
+    # 3. Поиск
+    elif command == '2':
+        name = input('Название: ')
+        for product in products:
+            if product[0].lower() == name.lower():
+                print(f'{product[0]} - {product[1]} руб. - {product[2]} шт.')
+                break
+        else:
+            print('Не найдено')
+    
+    # 4. Общая стоимость
+    elif command == '3':
+        vsego = 0
+        for product in products:
+            vsego += product[1] * product[2]
+        print(f'Общая стоимость: {vsego} руб.')
+    
+    # 5. Сохраняем
+    elif command == '4':
+        with open('products.csv', 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Название', 'Цена', 'Количество'])
+            writer.writerows(products)
+        print('Сохранено!')
+    
+    # 6. Сортировка по цене (без lambda)
+    elif command == '5':
+        sorted_products = products.copy()  # копируем список
+        # Пузырьковая сортировка по цене
+        for i in range(len(sorted_products)):
+            for j in range(i + 1, len(sorted_products)):
+                if sorted_products[i][1] > sorted_products[j][1]:
+                    sorted_products[i], sorted_products[j] = sorted_products[j], sorted_products[i]
+        
+        with open('sorted_products.csv', 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Название', 'Цена', 'Количество'])
+            writer.writerows(sorted_products)
+        print('Сохранено в sorted_products.csv')
+    
+    # Выход
+    elif command == '0':
+        with open('products.csv', 'w', encoding='utf-8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Название', 'Цена', 'Количество'])
+            writer.writerows(products)
+        print('До свидания!')
+        break
