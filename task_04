@@ -1,1 +1,42 @@
-
+import datetime
+import math
+try:
+    with open('calculator.log.txt', 'r') as file:
+        lines = file.readlines()
+        print('\n=== Последние 5 операций ===')
+        for line in lines[-5:]:
+            print(line.strip())
+        print('============================\n')
+except:
+    print('Лог-файл пустой или его не существует\n')
+while True:
+    command = input('Операция (+, -, *, /, log, sin) или \'ochistka\' или \'exit\': ')
+    if command == 'exit':
+        break
+    elif command == 'ochistka':
+        open('calculator.log.txt', 'w').close()
+        print('Лог очищен\n')
+        continue
+    if command in ['log', 'sin']:
+        chislo = float(input('Число: '))
+        if command == 'log':
+            resultat = math.log(chislo)
+            text = f'log({chislo})'
+        else:
+            resultat = math.sin(math.radians(chislo))
+            text = f'sin({chislo})'
+    else:
+        pervoe = float(input('Первое число: '))
+        vtoroe = float(input('Второе число: '))
+        if command == '+':
+            resultat = pervoe + vtoroe
+        elif command == '-':
+            resultat = pervoe - vtoroe
+        elif command == '*':
+            resultat = pervoe * vtoroe
+        elif command == '/':
+            resultat = pervoe / vtoroe
+        text = f'{pervoe} {command} {vtoroe}'
+    print(f'Результат: {resultat}')
+    with open('calculator.log.txt', 'a') as file:
+        file.write(f'[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text} = {resultat}\n')
