@@ -1,1 +1,62 @@
-
+with open('data.bin', 'wb') as file:
+    file.write('DATA'.encode())
+    file.write((1).to_bytes(2, 'little'))
+    file.write((3).to_bytes(4, 'little'))
+    file.write((1704067200).to_bytes(8, 'little'))
+    file.write((101).to_bytes(4, 'little'))
+    file.write((2050).to_bytes(2, 'little', signed=True))
+    file.write((1).to_bytes(1, 'little'))
+    file.write((1704153600).to_bytes(8, 'little'))
+    file.write((102).to_bytes(4, 'little'))
+    file.write((-520).to_bytes(2, 'little', signed=True))
+    file.write((0).to_bytes(1, 'little'))
+    file.write((1704240000).to_bytes(8, 'little'))
+    file.write((103).to_bytes(4, 'little'))
+    file.write((1580).to_bytes(2, 'little', signed=True))
+    file.write((1).to_bytes(1, 'little'))
+filename = 'data.bin'
+file = open(filename, 'rb')
+signatura = file.read(4)
+if signatura != b'DATA':
+    print('Ошибка: неверная сигнатура')
+    file.close()
+    exit()
+versiya_baytov = file.read(2)
+versiya = int.from_bytes(versiya_baytov, 'little')
+print('Версия:', versiya)
+kolvo_baytov = file.read(4)
+kolvo = int.from_bytes(kolvo_baytov, 'little')
+print('Количество записей:', kolvo)
+print()
+summa_temperatur = 0
+aktivnie_flagi = 0
+for shet_zikla in range(kolvo):
+    time_baytov = file.read(8)
+    time = int.from_bytes(time_baytov, 'little')
+    id_baytov = file.read(4)
+    id_number = int.from_bytes(id_baytov, 'little')
+    temperatura_baytov = file.read(2)
+    temperatura_raw = int.from_bytes(temperatura_baytov, 'little', signed=True)
+    temperatura = temperatura_raw / 100
+    flag_baytov = file.read(1)
+    flagi = int.from_bytes(flag_baytov, 'little')
+    summa_temperatur = summa_temperatur + temperatura
+    if flagi & 1 == 1:
+        aktivnie_flagi = aktivnie_flagi + 1
+    if shet_zikla < 3:
+        print('Запись', shet_zikla + 1, ':')
+        print('Время:', time)
+        print('ID:', id_number)
+        print('Температура:', temperatura, '°C')
+        print('Флаги:', bin(flagi))
+        print()
+file.close()
+if kolvo > 0:
+    srednyaya = summa_temperatur / kolvo
+    print('Статистика:')
+    print('Средняя температура:', round(srednyaya, 2), '°C')
+    print('Активных флагов:', aktivnie_flagi, 'из', kolvo)
+else:
+    print('В файле нет записей')
+print()
+print('Программа завершена')
