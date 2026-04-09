@@ -1,1 +1,133 @@
-
+import json
+import os
+def zagruzit_knigi():
+    if os.path.exists('library.json'):
+        file = open('library.json', 'r', encoding='utf-8')
+        knigi = json.load(file)
+        file.close()
+        return knigi
+    else:
+        return []
+def sohranit_knigi(knigi):
+    file = open('library.json', 'w', encoding='utf-8')
+    json.dump(knigi, file, ensure_ascii=False, indent=2)
+    file.close()
+def vse(knigi):
+    print()
+    if len(knigi) == 0:
+        print('В библиотеке нет книг')
+    else:
+        for kniga in knigi:
+            if kniga['available'] == True:
+                status = 'Доступна'
+            else:
+                status = 'Выдана'
+            print(f"{kniga['id']}. {kniga['title']} - {kniga['author']} ({kniga['year']}) - {status}")
+    print()
+knigi = zagruzit_knigi()
+while True:
+    print('1. Все книги')
+    print('2. Поиск')
+    print('3. Добавить книгу')
+    print('4. Изменить статус')
+    print('5. Удалить книгу')
+    print('6. Экспорт')
+    print('7. Выход')
+    vibor = input('Выберите действие: ')
+    if vibor == '1':
+        vse(knigi)
+    elif vibor == '2':
+        print('\nПоиск книг')
+        zapros = input('Введите название или автора: ')
+        zapros = zapros.lower()
+        naydeno = []
+        for kniga in knigi:
+            if zapros in kniga['title'].lower() or zapros in kniga['author'].lower():
+                naydeno.append(kniga)
+        if len(naydeno) == 0:
+            print('Ничего не найдено\n')
+        else:
+            print(f'\nНайдено книг: {len(naydeno)}')
+            for kniga in naydeno:
+                print(f"  - {kniga['title']} ({kniga['author']})")
+            print()
+    elif vibor == '3':
+        print('\nДобавление новой книги')
+        nazvanie = input('Название: ')
+        avtor = input('Автор: ')
+        year = input('Год: ')
+        year = int(year)
+        if len(knigi) == 0:
+            noviy_id = 1
+        else:
+            dlinniy_id = 0
+            for kniga in knigi:
+                if kniga['id'] > dlinniy_id:
+                    dlinniy_id = kniga['id']
+            noviy_id = dlinniy_id + 1
+        novaya_kniga = {
+            'id': noviy_id,
+            'title': nazvanie,
+            'author': avtor,
+            'year': year,
+            'available': True
+        }
+        knigi.append(novaya_kniga)
+        sohranit_knigi(knigi)
+        print(f"Книга '{nazvanie}' добавлена\n")
+    elif vibor == '4':
+        print('\nИзменение статуса книги')
+        vse(knigi)
+        id_knigi = input('Введите ID книги: ')
+        id_knigi = int(id_knigi)
+        kniga_naydena = False
+        for kniga in knigi:
+            if kniga['id'] == id_knigi:
+                kniga_naydena = True
+                if kniga['available'] == True:
+                    kniga['available'] = False
+                    print('Книга выдана')
+                else:
+                    kniga['available'] = True
+                    print('Книга доступна')
+                sohranit_knigi(knigi)
+                break
+        if kniga_naydena == False:
+            print('Книга с этим ID не найдена')
+        print()
+    elif vibor == '5':
+        print('\nУдаление книги')
+        vse(knigi)
+        id_knigi = input('Введите ID книги для удаления: ')
+        id_knigi = int(id_knigi)
+        noviy_spisok = []
+        for kniga in knigi:
+            if kniga['id'] != id_knigi:
+                noviy_spisok.append(kniga)
+        if len(noviy_spisok) == len(knigi):
+            print('Книга не найдена')
+        else:
+            knigi = noviy_spisok
+            sohranit_knigi(knigi)
+            print('Книга удалена')
+        print()
+    elif vibor == '6':
+        print('\nЭкспорт книг')
+        dostupnie = []
+        for kniga in knigi:
+            if kniga['available'] == True:
+                dostupnie.append(kniga)
+        if len(dostupnie) == 0:
+            print('Нет книг для экспорта')
+        else:
+            file = open('available_books.txt', 'w', encoding='utf-8')
+            for kniga in dostupnie:
+                file.write(f"{kniga['title']} - {kniga['author']} ({kniga['year']})\n")
+            file.close()
+            print(f"Экспортировано {len(dostupnie)} книг в файл available_books.txt")
+        print()
+    elif vibor == '7':
+        print('Завершение работы')
+        break
+    else:
+        print('Неправильный выбор\n')
