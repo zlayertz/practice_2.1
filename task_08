@@ -1,1 +1,11 @@
-
+with open('numbers.txt', 'r') as file_input, open('new.txt', 'w') as file_output:
+    for stroka in file_input:
+        chislo = int(stroka.strip())
+        if chislo % 7 == 0:
+            result = chislo * 100 / (73**2 + 29)
+            file_output.write(str(result) + '\n')
+        else:
+            file_output.write(stroka)
+with open('new.txt', 'r') as file_output, open('numbers.txt', 'w') as file_input:
+    for stroka in file_output:
+        file_input.write(stroka)
