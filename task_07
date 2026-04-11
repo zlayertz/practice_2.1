@@ -1,1 +1,24 @@
-
+name_file = input('Введите имя файла: ')
+kluch = int(input('Введите ключ (число от 0 до 255): '))
+rezhim = input('Действие shifrovat/rashifrovat: ')
+file = open(name_file, 'rb')
+soderzhimoe = file.read()
+file.close()
+resultat = []
+if rezhim == 'shifrovat':
+    for byte in soderzhimoe:
+        sdvinut = ((byte << 2) | (byte >> 6)) & 255
+        zashifrovan = sdvinut ^ kluch
+        resultat.append(zashifrovan)
+if rezhim == 'rashifrovat':
+    for byte in soderzhimoe:
+        posle_xor = byte ^ kluch
+        rashifrovan = ((posle_xor >> 2) | (posle_xor << 6)) & 255
+        resultat.append(rashifrovan)
+new_name = name_file + '.zashifrovano'
+if rezhim == 'rashifrovat':
+    new_name = name_file + '.rashifrovano'
+new_file = open(new_name, 'wb')
+new_file.write(bytes(resultat))
+new_file.close()
+print('Результат сохранён в файл:', new_name)
