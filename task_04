@@ -38,4 +38,4 @@ while True:
         text = f'{pervoe} {command} {vtoroe}'
     print(f'Результат: {resultat}')
     with open('calculator.log.txt', 'a') as file:
-        file.write(f'[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text} = {resultat}\n')
+        file.write(f'[{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] {text} = {resultat}\n')
